@@ -13,24 +13,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository 
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findByAvailableTrue();
-
     List<Car> findByAvailableTrueAndFeaturedTrue();
-
-    List<Car> findByAvailableTrueAndBodyTypeIgnoreCase(String bodyType);
-
-    List<Car> findByAvailableTrueAndFuelTypeIgnoreCase(String fuelType);
-
     Optional<Car> findByVin(String vin);
-
-    Page<Car> findByAvailableTrue(Pageable pageable);
 
     @Query("""
             SELECT c FROM Car c
-            WHERE c.available = true
+            WHERE (:includeUnavailable = true OR c.available = true)
               AND (:keyword IS NULL OR LOWER(c.make) LIKE LOWER(CONCAT('%', :keyword, '%'))
                    OR LOWER(c.model) LIKE LOWER(CONCAT('%', :keyword, '%')))
               AND (:bodyType IS NULL OR c.bodyType = :bodyType)
@@ -44,8 +36,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             @Param("fuelType") String fuelType,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
-            Pageable pageable
-    );
+            @Param("includeUnavailable") boolean includeUnavailable,
+            Pageable pageable);
 
     @Query("SELECT DISTINCT c.bodyType FROM Car c ORDER BY c.bodyType")
     List<String> findDistinctBodyTypes();
