@@ -20,9 +20,9 @@ public interface OrderMapper {
     @Mapping(target = "status", expression = "java(order.getStatus().name())")
     @Mapping(target = "items", source = "items")
     @Mapping(target = "payment", source = "payment")
-    OrderResponse toResponse(com.smkngun.dealership.model.Order order);
+    OrderResponse toResponse(Order order);
 
-    List<OrderResponse> toResponseList(List<com.smkngun.dealership.model.Order> orders);
+    List<OrderResponse> toResponseList(List<Order> orders);
 
     @Mapping(target = "carId", source = "car.id")
     @Mapping(target = "subtotal", expression = "java(item.getSubtotal())")

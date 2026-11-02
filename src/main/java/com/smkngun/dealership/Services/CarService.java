@@ -59,7 +59,7 @@ public class CarService<carMapper> {
 
     public List<String> distinctBodyTypes() { return carRepository.findDistinctBodyTypes(); }
     public List<String> distinctFuelTypes() { return carRepository.findDistinctFuelTypes(); }
-    public List<String> distinctMakes()     { return carRepository.findDistinctMakes(); }
+    public List<String> distinctMakes(){ return carRepository.findDistinctMakes(); }
 
     @Transactional
     public CarResponse create(CarCreateRequest request) {
