@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head('Sales')}"></head>
+<body>
+
+<div class="admin-shell">
+    <aside th:replace="~{fragments/admin-layout :: sidebar('sales')}"></aside>
+
+    <main class="admin-main">
+        <h1>Sales</h1>
+
+        <div class="stats" style="grid-template-columns: repeat(2, minmax(200px, 1fr));">
+            <div class="stat">
+                <div class="label">Total sales</div>
+                <div class="value" th:text="${#lists.size(sales)}">0</div>
+            </div>
+            <div class="stat accent">
+                <div class="label">Revenue</div>
+                <div class="value" th:text="'₦ ' + ${#numbers.formatDecimal(revenue, 1, 'COMMA', 2, 'POINT')}">₦ 0</div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-head">
+                <h2>All transactions</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Car</th><th>Customer</th><th>Price</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(sales)}">
+                        <td colspan="4" style="text-align:center; color: var(--muted);">No sales recorded yet.</td>
+                    </tr>
+                    <tr th:each="s : ${sales}">
+                        <td th:text="${#temporals.format(s.saleDate, 'dd MMM yyyy HH:mm')}">01 Jan</td>
+                        <td th:text="${s.carSummary}">Car</td>
+                        <td th:text="${s.customerName}">Customer</td>
+                        <td th:text="'₦ ' + ${#numbers.formatDecimal(s.salePrice, 1, 'COMMA', 2, 'POINT')}">₦ 0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

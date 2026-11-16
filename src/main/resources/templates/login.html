@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Log in')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<main class="container">
+    <div class="form-card">
+        <h1>Log in</h1>
+
+        <!-- Spring Security appends ?error on failure and ?logout after logout. -->
+        <div th:if="${param.error}" class="alert alert-error">Invalid username or password.</div>
+        <div th:if="${param.logout}" class="alert alert-info">You have been logged out.</div>
+        <div th:if="${param.registered}" class="alert alert-success">Account created — please log in.</div>
+
+        <!-- POSTs to Spring Security's default /login endpoint. -->
+        <form th:action="@{/login}" method="post">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus/>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required/>
+            </div>
+            <button class="btn" type="submit" style="width:100%">Log in</button>
+        </form>
+
+        <p style="text-align:center; margin-top: 16px;">
+            New here? <a th:href="@{/register}">Create an account</a>
+        </p>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

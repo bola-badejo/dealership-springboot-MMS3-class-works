@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Car Details')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<main class="container">
+    <!-- Flash messages set by RedirectAttributes land in the model under these keys. -->
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${err}" class="alert alert-error" th:text="${err}"></div>
+
+    <div class="detail">
+        <img th:src="${car.imageUrl} ?: 'https://placehold.co/800x500?text=Car'"
+             th:alt="|${car.make} ${car.model}|"/>
+
+        <div class="specs">
+            <h1 th:text="|${car.year} ${car.make} ${car.model}|">Car</h1>
+
+            <!-- Status badge uses a dynamic CSS class based on status. -->
+            <span class="badge"
+                  th:classappend="${car.status.name() == 'AVAILABLE' ? 'badge-available' :
+                                  (car.status.name() == 'SOLD' ? 'badge-sold' : 'badge-reserved')}"
+                  th:text="${car.status}">AVAILABLE</span>
+
+            <div class="big-price" th:text="'₦ ' + ${#numbers.formatDecimal(car.price, 1, 'COMMA', 2, 'POINT')}">₦ 0</div>
+
+            <dl>
+                <dt>Mileage</dt><dd th:text="${car.mileage ?: 0} + ' km'">0 km</dd>
+                <dt>Colour</dt><dd th:text="${car.color} ?: '—'">—</dd>
+                <dt>Body</dt><dd th:text="${car.bodyType} ?: '—'">—</dd>
+                <dt>Fuel</dt><dd th:text="${car.fuelType} ?: '—'">—</dd>
+                <dt>Transmission</dt><dd th:text="${car.transmission} ?: '—'">—</dd>
+            </dl>
+
+            <p th:if="${car.description}" th:text="${car.description}">Description</p>
+
+            <!-- Buy button only renders when the car is still available. -->
+            <div th:if="${car.status.name() == 'AVAILABLE'}" style="margin-top: 20px;">
+                <!-- Logged-in customer: show a buy form (POST, CSRF-protected). -->
+                <form sec:authorize="hasRole('CUSTOMER')" th:action="@{'/buy/' + ${car.id}}" method="post">
+                    <button class="btn" type="submit">Buy this car</button>
+                </form>
+                <!-- Not logged in: send them to login first. -->
+                <a sec:authorize="!isAuthenticated()" class="btn" th:href="@{/login}">Log in to buy</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

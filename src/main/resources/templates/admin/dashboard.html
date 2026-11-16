@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head('Dashboard')}"></head>
+<body>
+
+<div class="admin-shell">
+    <aside th:replace="~{fragments/admin-layout :: sidebar('dashboard')}"></aside>
+
+    <main class="admin-main">
+        <h1>Dashboard</h1>
+
+        <!-- Four KPI cards -->
+        <div class="stats">
+            <div class="stat">
+                <div class="label">Available cars</div>
+                <div class="value" th:text="${availableCount}">0</div>
+            </div>
+            <div class="stat">
+                <div class="label">Sold cars</div>
+                <div class="value" th:text="${soldCount}">0</div>
+            </div>
+            <div class="stat">
+                <div class="label">Total sales</div>
+                <div class="value" th:text="${salesCount}">0</div>
+            </div>
+            <div class="stat accent">
+                <div class="label">Revenue</div>
+                <div class="value" th:text="'₦ ' + ${#numbers.formatDecimal(revenue, 1, 'COMMA', 2, 'POINT')}">₦ 0</div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-head">
+                <h2>Recent sales</h2>
+                <a class="btn btn-outline" th:href="@{/admin/sales}">View all</a>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Car</th><th>Customer</th><th>Price</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(recentSales)}">
+                        <td colspan="4" style="text-align:center; color: var(--muted);">No sales yet.</td>
+                    </tr>
+                    <tr th:each="s : ${recentSales}">
+                        <td th:text="${#temporals.format(s.saleDate, 'dd MMM yyyy')}">01 Jan</td>
+                        <td th:text="${s.carSummary}">Car</td>
+                        <td th:text="${s.customerName}">Customer</td>
+                        <td th:text="'₦ ' + ${#numbers.formatDecimal(s.salePrice, 1, 'COMMA', 2, 'POINT')}">₦ 0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

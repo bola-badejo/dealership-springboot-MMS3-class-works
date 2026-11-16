@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+  Thymeleaf fragments live in this file. Other templates "include" blocks
+  from here using th:replace or th:insert, so we don't repeat markup.
+-->
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- th:fragment on <head> itself so callers can th:replace the whole head. -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <title th:text="${title} + ' · SmkNgun Motors'">SmkNgun Motors</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+
+<!-- Top navigation shared across every public page. -->
+<nav th:fragment="nav" class="nav">
+    <a class="brand" th:href="@{/}">Smk<span>Ngun</span> Motors</a>
+    <div class="links">
+        <a th:href="@{/}">Showroom</a>
+        <!-- sec:authorize runs a Spring Security check inside the template. -->
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">Admin</a>
+        <a sec:authorize="hasRole('CUSTOMER')" th:href="@{/account}">My Account</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Log in</a>
+        <a sec:authorize="!isAuthenticated()" class="btn" th:href="@{/register}">Sign up</a>
+        <!-- Logout is a POST form (CSRF-protected) — never a plain link. -->
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display:inline">
+            <button class="btn btn-outline" type="submit">Log out</button>
+        </form>
+    </div>
+</nav>
+
+<footer th:fragment="footer" class="footer">
+    <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> SmkNgun Motors — Class demo project.</p>
+</footer>
+
+</body>
+</html>

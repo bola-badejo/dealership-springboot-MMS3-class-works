@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- th:replace swaps in the <head> fragment and passes a title in. -->
+<head th:replace="~{fragments/layout :: head('Showroom')}"></head>
+<body>
+
+<!-- Insert the shared navigation. -->
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<!-- Hero banner with a search form. -->
+<section class="hero">
+    <h1>Find your next drive</h1>
+    <p>Hand-picked, inspected, and ready to roll off the lot.</p>
+    <form th:action="@{/}" method="get">
+        <input type="text" name="q" th:value="${q}" placeholder="Search make or model..."/>
+        <button class="btn btn-accent" type="submit">Search</button>
+    </form>
+</section>
+
+<main class="container">
+    <h2 th:text="${q} ? 'Results for &quot;' + ${q} + '&quot;' : 'Latest arrivals'">Latest arrivals</h2>
+
+    <!-- th:if renders the block only when the condition is true. -->
+    <p th:if="${#lists.isEmpty(cars)}" class="alert alert-info">
+        No cars match your search right now.
+    </p>
+
+    <!-- th:each is Thymeleaf's for-loop. -->
+    <div class="grid" th:unless="${#lists.isEmpty(cars)}">
+        <a th:each="c : ${cars}" th:href="@{'/cars/' + ${c.id}}" class="card">
+            <!-- Use a placeholder image when the record has none. -->
+            <img th:src="${c.imageUrl} ?: 'https://placehold.co/600x400?text=Car'"
+                 th:alt="|${c.make} ${c.model}|"/>
+            <div class="body">
+                <h3 th:text="|${c.year} ${c.make} ${c.model}|">Car</h3>
+                <div class="meta" th:text="|${c.mileage ?: 0} km · ${c.fuelType ?: 'Petrol'} · ${c.transmission ?: 'Auto'}|">Specs</div>
+                <!-- #numbers formats amounts. $0,0.00 = thousands + two decimals. -->
+                <div class="price" th:text="'₦ ' + ${#numbers.formatDecimal(c.price, 1, 'COMMA', 2, 'POINT')}">₦ 0.00</div>
+            </div>
+        </a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

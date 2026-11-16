@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Account')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<main class="container">
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+
+    <h1>Welcome, <span th:text="${username}">user</span> 👋</h1>
+    <p>Your purchase history is below.</p>
+
+    <div class="table-card" style="box-shadow: var(--shadow); background:#fff; border-radius: 12px; overflow:hidden; margin-top: 24px;">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Car</th><th>Price paid</th></tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(purchases)}">
+                    <td colspan="3" style="text-align:center; padding: 24px; color: var(--muted);">
+                        You haven't bought anything yet. <a th:href="@{/}">Browse the showroom</a>.
+                    </td>
+                </tr>
+                <tr th:each="s : ${purchases}">
+                    <td th:text="${#temporals.format(s.saleDate, 'dd MMM yyyy')}">01 Jan 2026</td>
+                    <td th:text="${s.carSummary}">Car</td>
+                    <td th:text="'₦ ' + ${#numbers.formatDecimal(s.salePrice, 1, 'COMMA', 2, 'POINT')}">₦ 0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

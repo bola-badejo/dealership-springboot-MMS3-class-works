@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Admin-specific head fragment: pulls in BOTH stylesheets. -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <title th:text="${title} + ' · Admin'">Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+
+<!-- Sidebar navigation for the admin area. -->
+<aside th:fragment="sidebar(active)" class="sidebar">
+    <div class="brand">Smk<span>Ngun</span></div>
+    <nav>
+        <a th:href="@{/admin}"        th:classappend="${active == 'dashboard'} ? 'active' : ''">Dashboard</a>
+        <a th:href="@{/admin/cars}"   th:classappend="${active == 'cars'}      ? 'active' : ''">Inventory</a>
+        <a th:href="@{/admin/sales}"  th:classappend="${active == 'sales'}     ? 'active' : ''">Sales</a>
+        <a th:href="@{/}">↩ Back to site</a>
+        <!-- Logout as a tiny inline form (CSRF-protected). -->
+        <form th:action="@{/logout}" method="post" style="margin-top: 12px;">
+            <button class="btn btn-outline" type="submit" style="width:100%">Log out</button>
+        </form>
+    </nav>
+</aside>
+
+</body>
+</html>
